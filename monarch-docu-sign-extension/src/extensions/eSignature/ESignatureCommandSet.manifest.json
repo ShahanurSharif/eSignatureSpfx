@@ -1,0 +1,25 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/command-set-extension-manifest.schema.json",
+
+  "id": "a6ee80b5-becc-4514-af38-5a57cddfaf0c",
+  "alias": "ESignatureCommandSet",
+  "componentType": "Extension",
+  "extensionType": "ListViewCommandSet",
+
+  // The "*" signifies that the version should be taken from the package.json
+  "version": "*",
+  "manifestVersion": 2,
+
+  // If true, the component can only be installed on sites where Custom Script is allowed.
+  // Components that allow authors to embed arbitrary script code should set this to true.
+  // https://support.office.com/en-us/article/Turn-scripting-capabilities-on-or-off-1f2c515f-5d7e-448a-9fd7-835da935584f
+  "requiresCustomScript": false,
+
+  "items": {
+    "SendForSignature": {
+      "title": { "default": "Send for Signature" },
+      "iconImageUrl": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJjdXJyZW50Q29sb3IiPgogIDwhLS0gRG9jdW1lbnQgb3V0bGluZSAtLT4KICA8cGF0aCBkPSJNNiAyQzUuNDQ3IDIgNSAyLjQ0NyA1IDN2MThjMCAuNTUzLjQ0NyAxIDEgMWgxMmMuNTUzIDAgMS0uNDQ3IDEtMVY4LjgyOGMwLS4yNjUtLjEwNS0uNTItLjI5My0uNzA3bC01LjgyOC01LjgyOEEuOTk2Ljk5NiAwIDAgMCAxMi4xNzIgMkg2ek0xMyAzLjQxNCAxOC41ODYgOUgxM1YzLjQxNHpNNiAyMFY0aDZ2NWMwIC41NTMuNDQ3IDEgMSAxaDV2MTBINnoiPjwvcGF0aD4KCiAgPCEtLSBTaWduYXR1cmUgcGF0aCAtLT4KICA8cGF0aCBkPSJNOC41IDE1LjVjLjUuNSAxLjUuNSAyIDBzMS41LTEgMi0xIC41IDEuNSAxIDIgLjUgMS41IDEgMiAxLjUuNSAyIDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48L3BhdGg+CgogIDwhLS0gUGVuIHRpcCAtLT4KICA8cGF0aCBkPSJNMTcgMTdsMS41IDEuNSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMS4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiPjwvcGF0aD4KPC9zdmc+Cg==",
+      "type": "command"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.16.0",
+    "sdksVersions": {},
+    "version": "1.21.0-rc.0",
+    "libraryName": "monarch-docu-sign",
+    "libraryId": "b79d9b26-34e9-4410-ac23-428ed72947e9",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "monarch-docu-sign",
+    "solutionShortDescription": "monarch-docu-sign description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "extension",
+    "extensionType": "ListViewCommandSet"
+  }
+}

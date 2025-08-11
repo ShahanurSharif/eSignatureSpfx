@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "monarch-e-signature-client-side-solution",
+    "id": "bd4db8a9-0094-4b44-8bc3-9e9c840655cf",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.21.0-rc.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "monarch-e-signature description"
+      },
+      "longDescription": {
+        "default": "monarch-e-signature description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "monarch-e-signature Feature",
+        "description": "The feature that activates elements of the monarch-e-signature solution.",
+        "id": "881abe4a-8cc0-4617-bf37-89cd3d33dd2e",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/monarch-e-signature.sppkg"
+  }
+}

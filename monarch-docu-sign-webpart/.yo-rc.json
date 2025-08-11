@@ -1,0 +1,18 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.16.0",
+    "sdksVersions": {},
+    "version": "1.21.0-rc.0",
+    "libraryName": "monarch-e-signature",
+    "libraryId": "bd4db8a9-0094-4b44-8bc3-9e9c840655cf",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "monarch-e-signature",
+    "solutionShortDescription": "monarch-e-signature description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

@@ -1,0 +1,30 @@
+.sigCanvas {
+    width: 100%;
+    border: 1px solid black;
+}
+.pdf-viewer {
+    background-color: black;
+    height: 1260px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    .ms-Label {
+        color: rgb(255, 255, 255) !important;
+    }
+}
+
+.pdf-viewer div {
+    pointer-events: auto;
+    color: rgb(255, 255, 255);
+}
+
+.dropped-item {
+    position: absolute;
+    z-index: 1;
+}
+
+canvas {
+    pointer-events: none;
+    z-index: 0;
+    /* optional - disables interaction */
+}
