@@ -15,6 +15,8 @@ type IFieldsProps = {
 const Fields: React.FC<IFieldsProps> = ({ context }) => {
   const recipients = useAppSelector((state) => state.esignature.recipients);
 
+  console.log(`🎨 Fields component rendered with ${recipients.length} recipients:`, recipients);
+
   return (
     <Stack tokens={stackTokens} className="white-label">
       <Label>
@@ -22,7 +24,7 @@ const Fields: React.FC<IFieldsProps> = ({ context }) => {
         then use your mouse or keyboard to drag or place it on the document.
       </Label>
       {recipients.map((recipient) => (
-        <ControlPalette recipient={recipient} />
+        <ControlPalette key={recipient.userId} recipient={recipient} />
       ))}
     </Stack>
   );

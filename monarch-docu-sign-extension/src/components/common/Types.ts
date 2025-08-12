@@ -31,12 +31,14 @@ export interface IDroppedControl {
   page: number;
   isRequired: boolean;
   isReadOnly: boolean;
+  isFinalized: boolean; // Indicates if the control is finalized
   value?: string; // For text fields
 }
 
 export interface IDroppedItemProps extends IDroppedControl {
   onMove: (id: string, x: number, y: number, page: number) => void;
   onDelete: (id: string) => void;
+  toggleControlRequired?: (id: string) => void;
 }
 
 export interface IPDFViewerProps {

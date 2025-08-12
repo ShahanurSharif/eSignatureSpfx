@@ -13,6 +13,7 @@ import {
   addControl,
   moveControl,
   removeControl,
+  toggleControlRequired,
   updateRequest,
 } from "../../store/store";
 
@@ -55,7 +56,9 @@ const PDFViewer: React.FC<IPDFViewerProps> = ({
   }, [fileUrl]);
 
   const handleControlDrop = (control: IDroppedControl) => {
+    console.log(`🎯 PDFViewer handleControlDrop called:`, control);
     dispatch(addControl(control));
+    console.log(`✅ addControl dispatched`);
   };
 
   const handleControlMove = (
@@ -69,6 +72,10 @@ const PDFViewer: React.FC<IPDFViewerProps> = ({
 
   const handleControlDelete = (id: string) => {
     dispatch(removeControl(id));
+  };
+
+  const handleToggleControlRequired = (id: string) => {
+    dispatch(toggleControlRequired(id));
   };
 
   return (
@@ -93,6 +100,7 @@ const PDFViewer: React.FC<IPDFViewerProps> = ({
               onDrop={handleControlDrop}
               onMove={handleControlMove}
               onDelete={handleControlDelete}
+              onToggleRequired={handleToggleControlRequired}
             />
           ))}
       </div>

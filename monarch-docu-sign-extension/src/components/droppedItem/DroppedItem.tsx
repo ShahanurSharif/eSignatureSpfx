@@ -8,7 +8,10 @@ const DroppedItem: React.FC<IDroppedItemProps> = ({
   type,
   x,
   y,
+  isRequired,
+  isFinalized,
   onDelete,
+  toggleControlRequired,
 }) => {
   const color = userColors[recipient.orderId] || {
     border: "#555",
@@ -17,6 +20,7 @@ const DroppedItem: React.FC<IDroppedItemProps> = ({
   const [{ isDragging }, dragRef] = useDrag({
     type: "DROPPED_CONTROL",
     item: { id, type, recipient },
+    canDrag: !isFinalized,
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -38,7 +42,7 @@ const DroppedItem: React.FC<IDroppedItemProps> = ({
     justifyContent: "space-between",
     height: "20px",
     width: "150px",
-    cursor: "move",
+    cursor: isFinalized ? "default" : "move",
   };
 
   const closeStyle: React.CSSProperties = {
@@ -50,10 +54,53 @@ const DroppedItem: React.FC<IDroppedItemProps> = ({
 
   return (
     <div ref={dragRef} style={containerStyle}>
-      {type}
-      <span style={closeStyle} onClick={() => onDelete(id)}>
-        ✖
-      </span>
+      <label>
+        {type}
+        {isRequired && <span style={{ color: "red", marginLeft: 2 }}>*</span>}
+      </label>
+
+      {/* Show toggle and delete when not finalized */}
+      {!isFinalized && (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {toggleControlRequired && (
+            <span
+              style={{
+                marginRight: 4,
+                color: "#666",
+                cursor: "pointer",
+                fontSize: "12px",
+              }}
+              onClick={() => toggleControlRequired(id)}
+              title={isRequired ? "Mark as Optional" : "Mark as Required"}
+            >
+              {isRequired ? "Req" : "Opt"}
+            </span>
+          )}
+          <span style={closeStyle} onClick={() => onDelete(id)}>
+            ✖
+          </span>
+        </div>
+      )}
+
+      {/* Show lock icon when finalized */}
+      {isFinalized && (
+        <span
+          style={{
+            position: "absolute",
+            top: -8,
+            right: -8,
+            background: "#fff",
+            borderRadius: "50%",
+            padding: "2px",
+            fontSize: 12,
+            color: "#888",
+            boxShadow: "0 0 3px rgba(0,0,0,0.2)",
+          }}
+          title="Locked"
+        >
+          🔒
+        </span>
+      )}
     </div>
   );
 };

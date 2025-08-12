@@ -57,6 +57,18 @@ const esignatureSlice = createSlice({
     removeControl(state, action: PayloadAction<string>) {
       state.controls = state.controls.filter((c) => c.id !== action.payload);
     },
+    toggleControlRequired(state, action: PayloadAction<string>) {
+      const control = state.controls.find((c) => c.id === action.payload);
+      if (control) {
+        control.isRequired = !control.isRequired;
+      }
+    },
+    updateControlFinalizeStatus(state, action: PayloadAction<boolean>) {
+      state.controls = state.controls.map((control) => ({
+        ...control,
+        isFinalized: action.payload, // Mark all controls as finalized
+      }));
+    },
     addRecipient(state, action: PayloadAction<IRecipient>) {
       state.recipients.push(action.payload);
     },
@@ -64,6 +76,40 @@ const esignatureSlice = createSlice({
       state.recipients = state.recipients.filter(
         (r) => r.emailId !== action.payload
       );
+    },
+    moveRecipientUp: (state, action: PayloadAction<string>) => {
+      const index = state.recipients.findIndex(
+        (r) => r.emailId === action.payload
+      );
+      if (index > 0) {
+        // Swap array positions
+        [state.recipients[index - 1], state.recipients[index]] = [
+          state.recipients[index],
+          state.recipients[index - 1],
+        ];
+
+        // Update their `order` property
+        const tempOrder = state.recipients[index].orderId;
+        state.recipients[index].orderId = state.recipients[index - 1].orderId;
+        state.recipients[index - 1].orderId = tempOrder;
+      }
+    },
+    moveRecipientDown: (state, action: PayloadAction<string>) => {
+      const index = state.recipients.findIndex(
+        (r) => r.emailId === action.payload
+      );
+      if (index < state.recipients.length - 1 && index !== -1) {
+        // Swap array positions
+        [state.recipients[index + 1], state.recipients[index]] = [
+          state.recipients[index],
+          state.recipients[index + 1],
+        ];
+
+        // Update their `order` property
+        const tempOrder = state.recipients[index].orderId;
+        state.recipients[index].orderId = state.recipients[index + 1].orderId;
+        state.recipients[index + 1].orderId = tempOrder;
+      }
     },
     setCurrentUser(state, action: PayloadAction<IRecipient>) {
       state.currentRecipient = action.payload;
@@ -99,8 +145,12 @@ export const {
   addControl,
   moveControl,
   removeControl,
+  toggleControlRequired,
+  updateControlFinalizeStatus,
   addRecipient,
   removeRecipient,
+  moveRecipientDown,
+  moveRecipientUp,
   setCurrentUser,
   updateSigningMode,
   updateRequest,

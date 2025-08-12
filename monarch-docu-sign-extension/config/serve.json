@@ -4,7 +4,7 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://monarch360demo.sharepoint.com/sites/DeveloperSandbox/Sandbox%20Document%20Library/Forms/AllItems.aspx",
+      "pageUrl": "https://monarch360demo.sharepoint.com/sites/shan/Shared%20Documents/Forms/AllItems.aspx",
       "customActions": {
         "a6ee80b5-becc-4514-af38-5a57cddfaf0c": {
           "location": "ClientSideExtension.ListViewCommandSet",
@@ -16,7 +16,7 @@
       }
     },
     "eSignature": {
-      "pageUrl": "https://monarch360demo.sharepoint.com/sites/DeveloperSandbox/Sandbox%20Document%20Library/Forms/AllItems.aspx",
+      "pageUrl": "https://monarch360demo.sharepoint.com/sites/shan/Shared%20Documents/Forms/AllItems.aspx",
       "customActions": {
         "a6ee80b5-becc-4514-af38-5a57cddfaf0c": {
           "location": "ClientSideExtension.ListViewCommandSet",

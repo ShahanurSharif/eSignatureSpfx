@@ -12,6 +12,7 @@ type PageDropZoneProps = {
   onDrop: (control: IDroppedControl) => void;
   onMove: (id: string, x: number, y: number, page: number) => void;
   onDelete: (id: string) => void;
+  onToggleRequired?: (id: string) => void;
 };
 
 const PageDropZone: React.FC<PageDropZoneProps> = ({
@@ -21,6 +22,7 @@ const PageDropZone: React.FC<PageDropZoneProps> = ({
   onDrop,
   onMove,
   onDelete,
+  onToggleRequired,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -53,26 +55,43 @@ const PageDropZone: React.FC<PageDropZoneProps> = ({
     renderPage();
   }, [page, pdf]);
 
-  const [, dropRef] = useDrop({
+  const [{ isOver }, dropRef] = useDrop(() => ({
     accept: ["CONTROL", "DROPPED_CONTROL"],
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+    hover: (item, monitor) => {
+      console.log(`🎯 HOVER over page ${page}:`, item);
+    },
     drop: (
       item: { id: string; type: Type; recipient: IRecipient },
       monitor
     ) => {
+      console.log(`🎯 DROP EVENT on page ${page}:`, item);
+      
       const offset = monitor.getClientOffset();
       const rect = containerRef.current?.getBoundingClientRect();
 
-      if (!offset || !rect) return;
+      console.log(`📍 Drop offset:`, offset);
+      console.log(`📦 Container rect:`, rect);
+
+      if (!offset || !rect) {
+        console.log(`❌ Missing offset or rect - drop cancelled`);
+        return;
+      }
 
       const x = offset.x - rect.left - 60;
       const y = offset.y - rect.top - 20;
 
+      console.log(`📐 Calculated position: x=${x}, y=${y}`);
+
       if (item.id) {
         // It's a repositioned DroppedItem
-        console.log({ x, y });
+        console.log(`🔄 Moving existing control: ${item.id}`);
         onMove(item.id, x, y, page);
       } else {
         // It's a new item from ControlPalette
+        console.log(`✨ Creating new control: ${item.type} for ${item.recipient.name}`);
         const newDropped: IDroppedControl = {
           id: Date.now().toString(),
           recipient: item.recipient,
@@ -82,13 +101,17 @@ const PageDropZone: React.FC<PageDropZoneProps> = ({
           page,
           isRequired: item.type === "SIGNATURE",
           isReadOnly: false,
+          isFinalized: false, // New controls are not finalized by default
         };
+        console.log(`📝 New control object:`, newDropped);
         onDrop(newDropped);
       }
     },
-  });
+  }));
 
   dropRef(containerRef);
+
+  console.log(`📄 PageDropZone rendered for page ${page}, controls: ${controls.length}, isOver: ${isOver}`);
 
   return (
     <div
@@ -109,6 +132,7 @@ const PageDropZone: React.FC<PageDropZoneProps> = ({
             {...control}
             onMove={onMove}
             onDelete={onDelete}
+            toggleControlRequired={onToggleRequired}
           />
         ) : null
       )}

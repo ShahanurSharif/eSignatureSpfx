@@ -15,6 +15,8 @@ const ControlPalette: React.FC<IControlPaletteProps> = ({ recipient }) => {
     background: "#f0f0f0",
   };
 
+  console.log(`🎨 ControlPalette rendered for recipient:`, recipient);
+
   return (
     <div className="control-container" style={{ padding: 10 }}>
       <h4 style={{ color: color.border }}>Controls for {recipient.name}</h4>
@@ -34,18 +36,39 @@ const DraggableItem = ({
 }) => {
   const [{ isDragging }, drag] = useDrag({
     type: "CONTROL",
-    item: { type, recipient },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
+    item: () => {
+      console.log(`🚀 Drag BEGIN: ${type} for ${recipient.name}`);
+      return { type, recipient };
+    },
+    collect: (monitor) => {
+      const dragging = monitor.isDragging();
+      console.log(`🎯 Monitor collect: ${type} isDragging=${dragging}`);
+      return {
+        isDragging: dragging,
+      };
+    },
+    canDrag: () => {
+      console.log(`🤔 Can drag check: ${type} for ${recipient.name}`);
+      return true;
+    },
+    end: (item, monitor) => {
+      const didDrop = monitor.didDrop();
+      console.log(`🏁 Drag END: ${type} for ${recipient.name}, didDrop: ${didDrop}`);
+      if (!didDrop) {
+        console.log(`❌ Drag cancelled - no drop target found`);
+      }
+    },
   });
+
+  console.log(`🎯 DraggableItem created: ${type} for ${recipient.name}, isDragging: ${isDragging}`);
+  console.log(`📍 Drag connector:`, typeof drag);
 
   const color = userColors[recipient.orderId] || {
     border: "#888",
     background: "#f0f0f0",
   };
 
-  const style: React.CSSProperties = {
+  const style = {
     padding: "8px 12px",
     margin: "8px 0",
     backgroundColor: color.background,
@@ -55,13 +78,22 @@ const DraggableItem = ({
     color: color.border,
     fontWeight: "bold",
     textAlign: "center",
-    cursor: "grab",
+    cursor: isDragging ? "grabbing" : "grab",
     height: "20px",
     width: "150px",
-  };
+    userSelect: "none",
+    touchAction: "manipulation",  // Allow some touch actions but prevent panning/zooming
+    WebkitUserSelect: "none",
+    MozUserSelect: "none",
+    msUserSelect: "none",
+  } as const;
 
   return (
-    <div ref={drag} style={style}>
+    <div 
+      ref={drag} 
+      style={style}
+      onDragStart={() => console.log(`🎯 Native drag start: ${type} for ${recipient.name}`)}
+    >
       {type}
     </div>
   );
