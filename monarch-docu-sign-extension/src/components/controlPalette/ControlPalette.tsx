@@ -16,7 +16,7 @@ const ControlPalette: React.FC<IControlPaletteProps> = ({ recipient }) => {
     background: "#f0f0f0",
   };
 
-  console.log(`🎨 ControlPalette rendered for recipient:`, recipient);
+  console.log(`ControlPalette rendered for recipient:`, recipient);
 
   return (
     <div className="control-container" style={{ padding: 10 }}>
@@ -39,7 +39,7 @@ const DraggableItem = ({
   const { startDrag } = useSimpleDrag();
   const isDragging = false; // simple drag doesn't track per-item visual yet
 
-  console.log(`🎯 DraggableItem created: ${type} for ${recipient.name}, isDragging: ${isDragging}`);
+  console.log(`DraggableItem created: ${type} for ${recipient.name}, isDragging: ${isDragging}`);
 
   const color = userColors[recipient.orderId] || {
     border: "#888",
@@ -70,7 +70,7 @@ const DraggableItem = ({
     onMouseDown={(e) => {
       e.preventDefault();
       startDrag({ type, recipient, originX: e.clientX, originY: e.clientY });
-      console.log(`🛫 SIMPLE DRAG start for ${type}`);
+  console.log(`SIMPLE DRAG start for ${type}`);
     }}
   >{type}</div>;
 };

@@ -14,13 +14,13 @@ const DnDContext: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const rootElement = typeof document !== "undefined" ? document.body : undefined;
   const initializedFlag = (window as any).__DND_PROVIDER_INIT__;
   if (initializedFlag) {
-    console.warn('⚠️ DnDContext: Another DnDProvider already initialized');
+  console.warn('DnDContext: Another DnDProvider already initialized');
   } else {
     (window as any).__DND_PROVIDER_INIT__ = true;
   }
   console.log(rootElement
-    ? '✅ DnD context initializing (HTML5Backend rootElement=document.body)'
-    : '⚠️ DnD context initializing (HTML5Backend) without document.body');
+  ? 'DnD context initializing (HTML5Backend rootElement=document.body)'
+  : 'DnD context initializing (HTML5Backend) without document.body');
   return <DndProvider backend={HTML5Backend} options={rootElement ? { rootElement } : undefined}>{children}</DndProvider>;
 };
 

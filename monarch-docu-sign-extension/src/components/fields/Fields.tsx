@@ -15,7 +15,7 @@ type IFieldsProps = {
 const Fields: React.FC<IFieldsProps> = ({ context }) => {
   const recipients = useAppSelector((state) => state.esignature.recipients);
 
-  console.log(`🎨 Fields component rendered with ${recipients.length} recipients:`, recipients);
+  console.log(`Fields component rendered with ${recipients.length} recipients:`, recipients);
 
   return (
     <Stack tokens={stackTokens} className="white-label">

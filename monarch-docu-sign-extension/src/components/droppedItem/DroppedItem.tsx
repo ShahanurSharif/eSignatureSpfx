@@ -36,7 +36,7 @@ const DroppedItem: React.FC<IDroppedItemProps> = ({
     (e.currentTarget as HTMLElement).addEventListener('pointerup', handlePointerUp as any, { once: true });
     // Window fallback
     window.addEventListener('pointerup', handlePointerUp as any, { once: true });
-    console.log('🟢 SIMPLE MOVE pointerdown', { id, x, y, page, pointerId: e.pointerId });
+  console.log('SIMPLE MOVE pointerdown', { id, x, y, page, pointerId: e.pointerId });
   };
 
   const handlePointerMove = (e: PointerEvent) => {
@@ -49,7 +49,7 @@ const DroppedItem: React.FC<IDroppedItemProps> = ({
     setTempPos({ x: newX, y: newY });
     if (nodeRef.current) nodeRef.current.style.pointerEvents = 'none';
     if ((dx * dx + dy * dy) % 400 === 0) {
-      console.log('🟡 SIMPLE MOVE pointermove', { id, newX, newY, dx, dy });
+  console.log('SIMPLE MOVE pointermove', { id, newX, newY, dx, dy });
     }
   };
 
@@ -60,7 +60,7 @@ const DroppedItem: React.FC<IDroppedItemProps> = ({
     const dy = e.clientY - mouseY;
   const newX = origX + dx;
   const newY = origY + dy;
-    console.log('🔄 SIMPLE MOVE pointerup', { id, from: { x: origX, y: origY }, to: { x: newX, y: newY }, page });
+  console.log('SIMPLE MOVE pointerup', { id, from: { x: origX, y: origY }, to: { x: newX, y: newY }, page });
     try {
       const targetPageEl = document.elementFromPoint(e.clientX, e.clientY)?.closest('[id^="page-"]');
       let targetPageNumber = page;
@@ -70,10 +70,10 @@ const DroppedItem: React.FC<IDroppedItemProps> = ({
       }
       if (typeof onMove === 'function') {
     onMove(id, newX, newY, targetPageNumber);
-    console.log('✅ SIMPLE MOVE committed', { id, newX, newY, targetPageNumber });
+  console.log('SIMPLE MOVE committed', { id, newX, newY, targetPageNumber });
       }
     } catch (err) {
-      console.warn('⚠️ SIMPLE MOVE: onMove failed or not wired', err);
+  console.warn('SIMPLE MOVE: onMove failed or not wired', err);
     }
     cleanupDrag();
   };

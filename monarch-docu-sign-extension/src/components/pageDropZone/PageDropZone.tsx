@@ -64,10 +64,10 @@ const PageDropZone: React.FC<PageDropZoneProps> = ({
       const canDrop = monitor.canDrop();
       const dragItem = monitor.getItem();
       const itemType = monitor.getItemType();
-      console.log(`📊 PAGEDROPZONE: Drop zone page ${page} (IN DIALOG) - isOver: ${over}, canDrop: ${canDrop}, itemType: ${String(itemType)}`);
+  console.log(`PAGEDROPZONE: Drop zone page ${page} - isOver: ${over}, canDrop: ${canDrop}, itemType: ${String(itemType)}`);
       if (dragItem && over) {
-        console.log(`🎯 PAGEDROPZONE: Drag item over page ${page} (IN DIALOG):`, dragItem);
-        console.log(`🔍 PAGEDROPZONE: Item validation:`, {
+  console.log(`PAGEDROPZONE: Drag item over page ${page}:`, dragItem);
+  console.log(`PAGEDROPZONE: Item validation:`, {
           hasType: !!(dragItem as any).type,
           hasRecipient: !!(dragItem as any).recipient,
           typeValue: (dragItem as any).type,
@@ -75,23 +75,23 @@ const PageDropZone: React.FC<PageDropZoneProps> = ({
         });
       } else if (!dragItem) {
         if (over) {
-          console.log(`⚠️ PAGEDROPZONE: isOver=true but monitor.getItem() is null (drag source payload missing)`);
+          console.log(`PAGEDROPZONE: isOver=true but monitor.getItem() is null (drag source payload missing)`);
         }
       }
       return {
         isOver: over,
       };
     },
-    hover: (item, monitor) => {
+  hover: (item, monitor) => {
       const offset = monitor.getClientOffset();
-      console.log(`🎯 PAGEDROPZONE: HOVER over page ${page} (IN DIALOG):`, { item, offset });
+  console.log(`PAGEDROPZONE: HOVER over page ${page}:`, { item, offset });
     },
     drop: (
       item: { id: string; type: Type; recipient: IRecipient },
       monitor
     ) => {
-      console.log(`🚀 PAGEDROPZONE: DROP EVENT STARTED on page ${page} (IN DIALOG):`, item);
-      console.log(`🔍 PAGEDROPZONE: Monitor state:`, {
+  console.log(`PAGEDROPZONE: DROP EVENT STARTED on page ${page}:`, item);
+  console.log(`PAGEDROPZONE: Monitor state:`, {
         didDrop: monitor.didDrop(),
         canDrop: monitor.canDrop(),
         isOver: monitor.isOver()
@@ -100,12 +100,12 @@ const PageDropZone: React.FC<PageDropZoneProps> = ({
       const offset = monitor.getClientOffset();
       const rect = containerRef.current?.getBoundingClientRect();
 
-      console.log(`📍 Drop offset:`, offset);
-      console.log(`📦 Container rect:`, rect);
-      console.log(`📄 Page container ref:`, !!containerRef.current);
+  console.log(`PAGEDROPZONE: Drop offset:`, offset);
+  console.log(`PAGEDROPZONE: Container rect:`, rect);
+  console.log(`PAGEDROPZONE: Page container ref present:`, !!containerRef.current);
 
       if (!offset || !rect) {
-        console.log(`❌ CRITICAL ERROR - Missing offset or rect - drop cancelled`);
+  console.log(`PAGEDROPZONE: CRITICAL ERROR - Missing offset or rect - drop cancelled`);
         console.log(`  - offset exists: ${!!offset}`);
         console.log(`  - rect exists: ${!!rect}`);
         console.log(`  - containerRef.current: ${!!containerRef.current}`);
@@ -119,16 +119,16 @@ const PageDropZone: React.FC<PageDropZoneProps> = ({
 
       if (item.id) {
         // It's a repositioned DroppedItem
-        console.log(`🔄 MOVING existing control: ${item.id} to (${x}, ${y})`);
+  console.log(`PAGEDROPZONE: MOVING existing control: ${item.id} to (${x}, ${y})`);
         try {
           onMove(item.id, x, y, page);
-          console.log(`✅ Move operation completed successfully`);
+          console.log(`PAGEDROPZONE: Move operation completed successfully`);
         } catch (error) {
-          console.error(`❌ Move operation failed:`, error);
+          console.error(`PAGEDROPZONE: Move operation failed:`, error);
         }
       } else {
         // It's a new item from ControlPalette
-        console.log(`✨ CREATING new control: ${item.type} for ${item.recipient.name} at (${x}, ${y})`);
+  console.log(`PAGEDROPZONE: Creating new control: ${item.type} for ${item.recipient.name} at (${x}, ${y})`);
         const newDropped: IDroppedControl = {
           id: Date.now().toString(),
           recipient: item.recipient,
@@ -140,17 +140,17 @@ const PageDropZone: React.FC<PageDropZoneProps> = ({
           isReadOnly: false,
           isFinalized: false, // New controls are not finalized by default
         };
-        console.log(`📝 New control object created:`, newDropped);
+  console.log(`PAGEDROPZONE: New control object created:`, newDropped);
         try {
           onDrop(newDropped);
-          console.log(`✅ Drop operation completed successfully`);
+          console.log(`PAGEDROPZONE: Drop operation completed successfully`);
         } catch (error) {
-          console.error(`❌ Drop operation failed:`, error);
+          console.error(`PAGEDROPZONE: Drop operation failed:`, error);
         }
       }
       
       // Return result for React DnD
-      console.log(`🎯 PAGEDROPZONE: DROP EVENT COMPLETED on page ${page} (IN DIALOG)`);
+  console.log(`PAGEDROPZONE: DROP EVENT COMPLETED on page ${page}`);
       return { success: true, page, position: { x, y } };
     },
   }));
@@ -168,13 +168,13 @@ const PageDropZone: React.FC<PageDropZoneProps> = ({
   useEffect(() => {
     if (overlayRef.current) {
       drop(overlayRef.current);
-      console.log(`🔗 PAGEDROPZONE: Drop target attached to overlay for page ${page}`);
+  console.log(`PAGEDROPZONE: Drop target attached to overlay for page ${page}`);
     } else {
-      console.log(`⏳ PAGEDROPZONE: Awaiting overlay ref for page ${page}`);
+  console.log(`PAGEDROPZONE: Awaiting overlay ref for page ${page}`);
     }
   }, [drop, page]);
 
-  console.log(`� PAGEDROPZONE: Render page ${page} (IN DIALOG), controls: ${controls.length}, isOver: ${isOver}`);
+  console.log(`PAGEDROPZONE: Render page ${page}, controls: ${controls.length}, isOver: ${isOver}`);
 
   // Add window-level drag detection
   React.useEffect(() => {

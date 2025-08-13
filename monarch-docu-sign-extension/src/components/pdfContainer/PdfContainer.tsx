@@ -62,41 +62,41 @@ const PdfContainer: React.FC<IPdfContainerProps> = ({
   context,
   onDismiss,
 }) => {
-  console.log(`🎨 DIALOG: PdfContainer component rendered`);
-  console.log(`  📖 Panel state: ${isOpen ? 'OPEN' : 'CLOSED'}`);
-  console.log(`  📄 File: ${fileName}`);
-  console.log(`  🔗 URL: ${fileUrl}`);
-  console.log(`  🌐 SharePoint Context:`, !!context);
+  console.log(`DIALOG: PdfContainer component rendered`);
+  console.log(`  Panel state: ${isOpen ? 'OPEN' : 'CLOSED'}`);
+  console.log(`  File: ${fileName}`);
+  console.log(`  URL: ${fileUrl}`);
+  console.log(`  SharePoint Context:`, !!context);
   
   const [isDragging, setIsDragging] = React.useState(false);
   
   React.useEffect(() => {
     if (isOpen) {
-      console.log(`✅ DIALOG: eSignature panel opened - initializing PDF viewer`);
+  console.log(`DIALOG: eSignature panel opened - initializing PDF viewer`);
     } else {
-      console.log(`❌ DIALOG: eSignature panel closed`);
+  console.log(`DIALOG: eSignature panel closed`);
     }
   }, [isOpen]);
 
   // Handle dismissal with drag protection
   const handleDismiss = React.useCallback(() => {
     if (isDragging) {
-      console.log(`🛡️ DIALOG: Dismissal blocked - drag operation in progress`);
+  console.log(`DIALOG: Dismissal blocked - drag operation in progress`);
       return;
     }
-    console.log(`🔒 DIALOG: Panel dismissal allowed - no active drag`);
+  console.log(`DIALOG: Panel dismissal allowed - no active drag`);
     onDismiss();
   }, [isDragging, onDismiss]);
 
   // Track drag state globally
   React.useEffect(() => {
     const handleDragStart = () => {
-      console.log(`🚀 DIALOG: Global drag start detected - protecting panel`);
+  console.log(`DIALOG: Global drag start detected - protecting panel`);
       setIsDragging(true);
     };
     
     const handleDragEnd = () => {
-      console.log(`🏁 DIALOG: Global drag end detected - allowing panel dismissal`);
+  console.log(`DIALOG: Global drag end detected - allowing panel dismissal`);
       setIsDragging(false);
     };
 
@@ -112,7 +112,7 @@ const PdfContainer: React.FC<IPdfContainerProps> = ({
   }, []);
 
   const onRenderHeader = () => {
-    console.log(`🎨 DIALOG: Rendering panel header for: ${fileName}`);
+  console.log(`DIALOG: Rendering panel header for: ${fileName}`);
     return (
       <Stack
         horizontal

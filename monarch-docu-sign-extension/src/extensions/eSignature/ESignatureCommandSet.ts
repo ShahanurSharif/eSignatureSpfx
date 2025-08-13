@@ -30,15 +30,15 @@ const PANEL_CONTAINER_ID = "eSignDocContainer";
 
 export default class ESignatureCommandSet extends BaseListViewCommandSet<IESignatureCommandSetProperties> {
   private onDismiss(): void {
-    console.log(`🔒 EXTENSION: Dialog dismiss requested - closing eSignature panel`);
+  console.log(`EXTENSION: Dialog dismiss requested - closing eSignature panel`);
     const panelContainer = document.getElementById(PANEL_CONTAINER_ID);
     if (panelContainer) {
       console.log(`🧹 EXTENSION: Unmounting React components and removing panel`);
       ReactDOM.unmountComponentAtNode(panelContainer);
       panelContainer.remove();
-      console.log(`✅ EXTENSION: Panel closed and cleaned up`);
+  console.log(`EXTENSION: Panel closed and cleaned up`);
     } else {
-      console.warn(`⚠️ EXTENSION: Panel container not found during dismiss`);
+  console.warn(`EXTENSION: Panel container not found during dismiss`);
     }
   }
 
@@ -51,11 +51,11 @@ export default class ESignatureCommandSet extends BaseListViewCommandSet<IESigna
     let panelContainer = document.getElementById(PANEL_CONTAINER_ID);
 
     if (!panelContainer) {
-      console.log(`📦 EXTENSION: Creating new panel container DOM element`);
+  console.log(`EXTENSION: Creating new panel container DOM element`);
       panelContainer = document.createElement("div");
       panelContainer.id = PANEL_CONTAINER_ID;
       document.body.appendChild(panelContainer);
-      console.log(`✅ EXTENSION: Panel container added to SharePoint page body`);
+  console.log(`EXTENSION: Panel container added to SharePoint page body`);
     } else {
       console.log(`♻️ EXTENSION: Reusing existing panel container`);
     }
@@ -63,9 +63,9 @@ export default class ESignatureCommandSet extends BaseListViewCommandSet<IESigna
     const fileUrl = selectedItem?.getValueByName("FileRef");
     const fileName = selectedItem?.getValueByName("FileLeafRef");
 
-    console.log(`🎨 EXTENSION: Rendering PdfContainer React component...`);
-    console.log(`  📄 File: ${fileName}`);
-    console.log(`  🔗 URL: ${fileUrl}`);
+  console.log(`EXTENSION: Rendering PdfContainer React component...`);
+  console.log(`  File: ${fileName}`);
+  console.log(`  URL: ${fileUrl}`);
     console.log(`  👁️ Visible: ${visibility}`);
 
     const element = React.createElement(
@@ -86,9 +86,9 @@ export default class ESignatureCommandSet extends BaseListViewCommandSet<IESigna
 
     if (panelContainer) {
   ReactDOM.render(element, document.getElementById(PANEL_CONTAINER_ID));
-      console.log(`✅ EXTENSION: PdfContainer rendered to DOM`);
+  console.log(`EXTENSION: PdfContainer rendered to DOM`);
     } else {
-      console.error(`❌ EXTENSION: Failed to find panel container for rendering`);
+  console.error(`EXTENSION: Failed to find panel container for rendering`);
     }
   }
 
@@ -106,9 +106,9 @@ export default class ESignatureCommandSet extends BaseListViewCommandSet<IESigna
   public onExecute(event: IListViewCommandSetExecuteEventParameters): void {
     switch (event.itemId) {
       case "SendForSignature":
-        console.log(`🚀 EXTENSION: eSignature command executed on SharePoint AllItems.aspx`);
-        console.log(`📄 Selected file:`, event.selectedRows[0]?.getValueByName("FileLeafRef"));
-        console.log(`🔗 File URL:`, event.selectedRows[0]?.getValueByName("FileRef"));
+  console.log(`EXTENSION: eSignature command executed on SharePoint AllItems.aspx`);
+  console.log(`EXTENSION: Selected file:`, event.selectedRows[0]?.getValueByName("FileLeafRef"));
+  console.log(`EXTENSION: File URL:`, event.selectedRows[0]?.getValueByName("FileRef"));
         console.log(`📱 Opening eSignature panel/dialog...`);
         this._renderPanel(event.selectedRows[0], true);
         break;

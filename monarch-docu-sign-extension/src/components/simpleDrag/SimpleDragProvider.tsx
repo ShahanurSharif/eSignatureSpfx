@@ -40,7 +40,7 @@ const SimpleDragProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // Seed ghost position immediately so user sees feedback even before first mousemove
     (window as any).lastDragX = p.originX + 12;
     (window as any).lastDragY = p.originY + 12;
-    console.log('🛠 SIMPLE DRAG: startDrag called', p);
+  console.log('SIMPLE DRAG: startDrag called', p);
     setDragging({ ...p, startedAt: Date.now() });
   }, []);
 
@@ -49,7 +49,7 @@ const SimpleDragProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   React.useEffect(() => {
     if (!dragging) return;
 
-    console.log('🧭 SIMPLE DRAG: Effect mounted - attaching listeners');
+  console.log('SIMPLE DRAG: Effect mounted - attaching listeners');
     let moveCount = 0;
 
     const placeControl = (clientX: number, clientY: number, reason: string) => {
@@ -70,23 +70,23 @@ const SimpleDragProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           isReadOnly: false,
           isFinalized: false,
         };
-        console.log(`🛬 SIMPLE DRAG: Dropping control (${reason})`, newControl);
+  console.log(`SIMPLE DRAG: Dropping control (${reason})`, newControl);
         dispatch(addControl(newControl));
       } else {
-        console.log(`🛑 SIMPLE DRAG: No page under cursor on ${reason}`, { clientX, clientY });
+  console.log(`SIMPLE DRAG: No page under cursor on ${reason}`, { clientX, clientY });
       }
     };
 
     const handleMove = (e: MouseEvent) => {
       moveCount++;
       if (moveCount < 5 || moveCount % 10 === 0) {
-        console.log('🧲 SIMPLE DRAG move', { x: e.clientX, y: e.clientY, moveCount });
+  console.log('SIMPLE DRAG move', { x: e.clientX, y: e.clientY, moveCount });
       }
       (window as any).lastDragX = e.clientX + 12;
       (window as any).lastDragY = e.clientY + 12;
     };
     const handleUp = (e: MouseEvent) => {
-      console.log('🖱 SIMPLE DRAG mouseup', { x: e.clientX, y: e.clientY });
+  console.log('SIMPLE DRAG mouseup', { x: e.clientX, y: e.clientY });
       placeControl(e.clientX, e.clientY, 'mouseup');
       cleanup();
     };
@@ -95,13 +95,13 @@ const SimpleDragProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       (window as any).lastDragY = e.clientY + 12;
     };
     const handlePointerUp = (e: PointerEvent) => {
-      console.log('🖱 SIMPLE DRAG pointerup', { x: e.clientX, y: e.clientY });
+  console.log('SIMPLE DRAG pointerup', { x: e.clientX, y: e.clientY });
       placeControl(e.clientX, e.clientY, 'pointerup');
       cleanup();
     };
     const handleDocumentClick = (e: MouseEvent) => {
       if (!dragging) return;
-      console.log('🖱 SIMPLE DRAG document click fallback', { x: e.clientX, y: e.clientY });
+  console.log('SIMPLE DRAG document click fallback', { x: e.clientX, y: e.clientY });
       placeControl(e.clientX, e.clientY, 'click-fallback');
       cleanup();
     };
@@ -126,7 +126,7 @@ const SimpleDragProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // Expose debug helper
     (window as any).cancelSimpleDrag = () => {
-      console.log('⛔️ SIMPLE DRAG: cancelSimpleDrag invoked');
+  console.log('SIMPLE DRAG: cancelSimpleDrag invoked');
       cleanup();
     };
 
