@@ -1,45 +1,27 @@
 import * as React from "react";
 import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { TouchBackend } from "react-dnd-touch-backend";
-import { MultiBackend } from "react-dnd-multi-backend";
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
-// MultiBackend options with HTML5 first, then mouse/touch fallback
-const backendOptions = {
-  backends: [
-    {
-      backend: HTML5Backend,
-      transition: undefined as any, // HTML5 will be tried first
-    },
-    {
-      backend: TouchBackend,
-      options: { enableMouseEvents: true, enableTouchEvents: true },
-      preview: true,
-      transition: undefined as any,
-    }
-  ]
-};
+// NOTE: FluentUI Panel renders its content through a React Portal (Layer) directly under document.body.
+// That means the physical DOM elements for drag sources & drop targets are NOT descendants of the div
+// where <DnDProvider> is mounted. HTML5Backend by default only monitors events that bubble within the
+// provider's DOM subtree. Consequently, dragstart never fires for portal children (our palette items),
+// so useDrag's item() callback + isDragging state never activate.
+// Fix: Explicitly set 'rootElement' to document.body so the backend attaches its event listeners at a
+// common ancestor that DOES contain the portalled nodes.
 
 const DnDContext: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  console.log("✅ DnD context loaded with MultiBackend (HTML5 + Mouse/Touch fallback)");
-  
-  // Debug backend capabilities
-  React.useEffect(() => {
-    console.log("🔍 Checking MultiBackend capabilities...");
-    const supportsTouch = 'ontouchstart' in window;
-    const supportsPointer = 'onpointerdown' in window;
-    const supportsDrag = 'ondragstart' in document.createElement('div');
-    const userAgent = navigator.userAgent;
-    
-    console.log(`Touch support: ${supportsTouch}`);
-    console.log(`Pointer support: ${supportsPointer}`);
-    console.log(`Drag support: ${supportsDrag}`);
-    console.log(`User Agent: ${userAgent}`);
-    console.log(`Is SharePoint Frame: ${window.parent !== window}`);
-    console.log(`📱 Using MultiBackend with mouse/touch fallback for SharePoint compatibility`);
-  }, []);
-  
-  return <DndProvider backend={MultiBackend} options={backendOptions}>{children}</DndProvider>;
+  const rootElement = typeof document !== "undefined" ? document.body : undefined;
+  const initializedFlag = (window as any).__DND_PROVIDER_INIT__;
+  if (initializedFlag) {
+    console.warn('⚠️ DnDContext: Another DnDProvider already initialized');
+  } else {
+    (window as any).__DND_PROVIDER_INIT__ = true;
+  }
+  console.log(rootElement
+    ? '✅ DnD context initializing (HTML5Backend rootElement=document.body)'
+    : '⚠️ DnD context initializing (HTML5Backend) without document.body');
+  return <DndProvider backend={HTML5Backend} options={rootElement ? { rootElement } : undefined}>{children}</DndProvider>;
 };
 
 export default DnDContext;

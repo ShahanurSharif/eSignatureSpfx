@@ -19,18 +19,31 @@ const CustomPanel: React.FC<ICustomPanelProps> = ({
   fileUrl,
   context,
 }) => {
+  console.log(`🎨 CUSTOMPANEL: CustomPanel component rendered`);
+  console.log(`  ⏳ Loading: ${isLoading}`);
+  console.log(`  🔗 FileUrl: ${fileUrl}`);
+  console.log(`  🌐 Context: ${!!context}`);
+  
   const dispatch = useAppDispatch();
   const recipients = useAppSelector((state) => state.esignature.recipients);
   const controls = useAppSelector((state) => state.esignature.controls);
   const isFinalized = useAppSelector((state) => state.esignature.title !== "");
 
+  console.log(`📊 CUSTOMPANEL: Store state - Recipients: ${recipients.length}, Controls: ${controls.length}, Finalized: ${isFinalized}`);
+
   const [currentStep, setCurrentStep] = React.useState<IESignatureStep>(
     IESignatureStep.Step_1
   );
+  
+  console.log(`📍 CUSTOMPANEL: Current step: ${currentStep}`);
   const onNextClick = () => {
-    if (currentStep === IESignatureStep.Step_1)
+    console.log(`➡️ CUSTOMPANEL: Next button clicked - Current step: ${currentStep}`);
+    if (currentStep === IESignatureStep.Step_1) {
+      console.log(`🔄 CUSTOMPANEL: Moving from Step 1 to Step 2 (Fields/Drag & Drop)`);
       setCurrentStep(IESignatureStep.Step_2);
+    }
     if (currentStep === IESignatureStep.Step_2) {
+      console.log(`🔄 CUSTOMPANEL: Moving from Step 2 to Step 3 (Send Email) - Finalizing controls`);
       setCurrentStep(IESignatureStep.Step_3);
       // Finalize controls when moving to Step 3
       dispatch(updateControlFinalizeStatus(true));
@@ -38,9 +51,13 @@ const CustomPanel: React.FC<ICustomPanelProps> = ({
   };
 
   const onBackClick = () => {
-    if (currentStep === IESignatureStep.Step_2)
+    console.log(`⬅️ CUSTOMPANEL: Back button clicked - Current step: ${currentStep}`);
+    if (currentStep === IESignatureStep.Step_2) {
+      console.log(`🔄 CUSTOMPANEL: Moving from Step 2 back to Step 1 (Recipients)`);
       setCurrentStep(IESignatureStep.Step_1);
+    }
     if (currentStep === IESignatureStep.Step_3) {
+      console.log(`🔄 CUSTOMPANEL: Moving from Step 3 back to Step 2 (Fields/Drag & Drop) - Unfinalizing controls`);
       setCurrentStep(IESignatureStep.Step_2);
       // Reset controls to not finalized when going back to Step 2
       dispatch(updateControlFinalizeStatus(false));
@@ -85,6 +102,7 @@ const CustomPanel: React.FC<ICustomPanelProps> = ({
         {/* Step 1 */}
         {currentStep === IESignatureStep.Step_1 && (
           <div>
+            {console.log(`👥 CUSTOMPANEL: Rendering Step 1 - Recipients`)}
             <Recipients context={context} />
           </div>
         )}
@@ -92,6 +110,7 @@ const CustomPanel: React.FC<ICustomPanelProps> = ({
         {/* Step 2 */}
         {currentStep === IESignatureStep.Step_2 && (
           <div>
+            {console.log(`🎯 CUSTOMPANEL: Rendering Step 2 - Fields (DRAG & DROP)`)}
             <Fields context={context} />
           </div>
         )}
@@ -99,6 +118,7 @@ const CustomPanel: React.FC<ICustomPanelProps> = ({
         {/* Step 3 */}
         {currentStep === IESignatureStep.Step_3 && (
           <div>
+            {console.log(`📧 CUSTOMPANEL: Rendering Step 3 - SendEmail`)}
             <SendEmail />
           </div>
         )}

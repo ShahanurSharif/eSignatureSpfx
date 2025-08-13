@@ -1,0 +1,3 @@
+https://github.com/SharePoint/sp-dev-docs/issues/4808#issuecomment-608483704
+https://sharepoint.stackexchange.com/questions/271154/spfx-and-react-dnd
+https://techcommunity.microsoft.com/discussions/sharepointdev/react-webpart-drag-and-drop-files-issue/1308739

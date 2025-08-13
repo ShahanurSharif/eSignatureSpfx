@@ -24,6 +24,11 @@ const PDFViewer: React.FC<IPDFViewerProps> = ({
   fileName,
   context,
 }) => {
+  console.log(`📖 PDFVIEWER: PDFViewer component initializing`);
+  console.log(`  📄 File: ${fileName}`);
+  console.log(`  🔗 URL: ${fileUrl}`);
+  console.log(`  🌐 SharePoint Context:`, !!context);
+  
   const [pdfDoc, setPdfDoc] = React.useState<PDFDocumentProxy | null>(null);
   const [numPages, setNumPages] = React.useState(0);
 
@@ -31,34 +36,64 @@ const PDFViewer: React.FC<IPDFViewerProps> = ({
   const dispatch = useAppDispatch();
 
   const droppedControls = useAppSelector((state) => state.esignature.controls);
+  console.log(`📊 PDFVIEWER: Current dropped controls count: ${droppedControls.length}`);
 
   React.useEffect(() => {
+    console.log(`🔄 PDFVIEWER: fileUrl effect triggered`);
+    console.log(`🚀 PDFVIEWER: Starting PDF load process for: ${fileName}`);
+    
     const loadPDF = async () => {
-      const loadingTask = pdfjsLib.getDocument(
-        fileUrl as DocumentInitParameters
-      );
-      const pdf = await loadingTask.promise;
-      setPdfDoc(pdf);
-      setNumPages(pdf.numPages);
+      try {
+        console.log(`📥 PDFVIEWER: Creating PDF loading task...`);
+        const loadingTask = pdfjsLib.getDocument(
+          fileUrl as DocumentInitParameters
+        );
+        console.log(`⏳ PDFVIEWER: Waiting for PDF promise...`);
+        const pdf = await loadingTask.promise;
+        setPdfDoc(pdf);
+        setNumPages(pdf.numPages);
+        
+        console.log(`✅ PDFVIEWER: PDF loaded successfully`);
+        console.log(`📋 PDFVIEWER: PDF Details:`, {
+          numPages: pdf.numPages,
+          fingerprints: pdf.fingerprints,
+          fileName: fileName
+        });
 
-      const newGuid = uuidv4();
-      dispatch(
-        updateRequest({
-          id: newGuid,
-          documentUri: fileUrl,
-          name: fileName,
-          siteUri: context.pageContext.web.absoluteUrl,
-          targetFolderUri: context.pageContext.web.absoluteUrl,
-        })
-      );
+        const newGuid = uuidv4();
+        console.log(`🆔 PDFVIEWER: Generated request ID: ${newGuid}`);
+        console.log(`📝 PDFVIEWER: Dispatching updateRequest to store...`);
+        dispatch(
+          updateRequest({
+            id: newGuid,
+            documentUri: fileUrl,
+            name: fileName,
+            siteUri: context.pageContext.web.absoluteUrl,
+            targetFolderUri: context.pageContext.web.absoluteUrl,
+          })
+        );
+        console.log(`✅ PDFVIEWER: Store update dispatched successfully`);
+      } catch (error) {
+        console.error(`❌ PDFVIEWER: Failed to load PDF:`, error);
+        console.error(`🔗 PDFVIEWER: Failed URL: ${fileUrl}`);
+      }
     };
     loadPDF();
   }, [fileUrl]);
 
   const handleControlDrop = (control: IDroppedControl) => {
     console.log(`🎯 PDFViewer handleControlDrop called:`, control);
-    dispatch(addControl(control));
-    console.log(`✅ addControl dispatched`);
+    console.log(`📋 Control details - ID: ${control.id}, Type: ${control.type}, Position: (${control.x}, ${control.y}), Page: ${control.page}`);
+    console.log(`👤 Recipient: ${control.recipient.name} (Order: ${control.recipient.orderId})`);
+    console.log(`⚙️ Settings - Required: ${control.isRequired}, ReadOnly: ${control.isReadOnly}, Finalized: ${control.isFinalized}`);
+    
+    try {
+      console.log(`🚀 Dispatching addControl action...`);
+      dispatch(addControl(control));
+      console.log(`✅ addControl dispatched successfully`);
+    } catch (error) {
+      console.error(`❌ Error dispatching addControl:`, error);
+    }
   };
 
   const handleControlMove = (
@@ -67,11 +102,28 @@ const PDFViewer: React.FC<IPDFViewerProps> = ({
     y: number,
     page: number
   ) => {
-    dispatch(moveControl({ id, x, y, page }));
+    console.log(`🔄 PDFViewer handleControlMove called:`);
+    console.log(`📍 Moving control ID: ${id} to position (${x}, ${y}) on page ${page}`);
+    
+    try {
+      console.log(`🚀 Dispatching moveControl action...`);
+      dispatch(moveControl({ id, x, y, page }));
+      console.log(`✅ moveControl dispatched successfully`);
+    } catch (error) {
+      console.error(`❌ Error dispatching moveControl:`, error);
+    }
   };
 
   const handleControlDelete = (id: string) => {
-    dispatch(removeControl(id));
+    console.log(`🗑️ PDFViewer handleControlDelete called for ID: ${id}`);
+    
+    try {
+      console.log(`🚀 Dispatching removeControl action...`);
+      dispatch(removeControl(id));
+      console.log(`✅ removeControl dispatched successfully`);
+    } catch (error) {
+      console.error(`❌ Error dispatching removeControl:`, error);
+    }
   };
 
   const handleToggleControlRequired = (id: string) => {

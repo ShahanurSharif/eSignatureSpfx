@@ -1,5 +1,6 @@
 import * as React from "react";
-import { useDrag } from "react-dnd";
+// import { useDrag, useDrop } from "react-dnd";
+import { useSimpleDrag } from "../simpleDrag/SimpleDragProvider";
 import {
   IControlPaletteProps,
   IRecipient,
@@ -23,6 +24,7 @@ const ControlPalette: React.FC<IControlPaletteProps> = ({ recipient }) => {
       {controls.map((type) => (
         <DraggableItem key={type} type={type} recipient={recipient} />
       ))}
+      <TestDropZone />
     </div>
   );
 };
@@ -34,34 +36,10 @@ const DraggableItem = ({
   type: Type;
   recipient: IRecipient;
 }) => {
-  const [{ isDragging }, drag] = useDrag({
-    type: "CONTROL",
-    item: () => {
-      console.log(`🚀 Drag BEGIN: ${type} for ${recipient.name}`);
-      return { type, recipient };
-    },
-    collect: (monitor) => {
-      const dragging = monitor.isDragging();
-      console.log(`🎯 Monitor collect: ${type} isDragging=${dragging}`);
-      return {
-        isDragging: dragging,
-      };
-    },
-    canDrag: () => {
-      console.log(`🤔 Can drag check: ${type} for ${recipient.name}`);
-      return true;
-    },
-    end: (item, monitor) => {
-      const didDrop = monitor.didDrop();
-      console.log(`🏁 Drag END: ${type} for ${recipient.name}, didDrop: ${didDrop}`);
-      if (!didDrop) {
-        console.log(`❌ Drag cancelled - no drop target found`);
-      }
-    },
-  });
+  const { startDrag } = useSimpleDrag();
+  const isDragging = false; // simple drag doesn't track per-item visual yet
 
   console.log(`🎯 DraggableItem created: ${type} for ${recipient.name}, isDragging: ${isDragging}`);
-  console.log(`📍 Drag connector:`, typeof drag);
 
   const color = userColors[recipient.orderId] || {
     border: "#888",
@@ -82,21 +60,22 @@ const DraggableItem = ({
     height: "20px",
     width: "150px",
     userSelect: "none",
-    touchAction: "manipulation",  // Allow some touch actions but prevent panning/zooming
     WebkitUserSelect: "none",
     MozUserSelect: "none",
     msUserSelect: "none",
   } as const;
-
-  return (
-    <div 
-      ref={drag} 
-      style={style}
-      onDragStart={() => console.log(`🎯 Native drag start: ${type} for ${recipient.name}`)}
-    >
-      {type}
-    </div>
-  );
+  // Attach a ref wrapper so we can log native drag events (helps diagnose backend root issues)
+  return <div
+    style={style}
+    onMouseDown={(e) => {
+      e.preventDefault();
+      startDrag({ type, recipient, originX: e.clientX, originY: e.clientY });
+      console.log(`🛫 SIMPLE DRAG start for ${type}`);
+    }}
+  >{type}</div>;
 };
 
 export default ControlPalette;
+
+// --- Inline diagnostic drop zone to isolate issues (not part of final UI) ---
+const TestDropZone: React.FC = () => null; // disabled in simple drag mode

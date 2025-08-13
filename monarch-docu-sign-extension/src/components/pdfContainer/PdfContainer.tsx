@@ -1,10 +1,8 @@
 import * as React from "react";
-import DnDContext from "../DnDContext";
 import { IPanelStyles, Panel, PanelType, Stack, Text } from "@fluentui/react";
 import PDFViewer from "../pdfViewer/PDFViewer";
+import SimpleDragProvider from "../simpleDrag/SimpleDragProvider";
 import { ListViewCommandSetContext } from "@microsoft/sp-listview-extensibility";
-import { Provider } from "react-redux";
-import { store } from "../../store/store";
 
 type IPdfContainerProps = {
   isOpen: boolean;
@@ -64,54 +62,105 @@ const PdfContainer: React.FC<IPdfContainerProps> = ({
   context,
   onDismiss,
 }) => {
-  const onRenderHeader = () => (
-    <Stack
-      horizontal
-      verticalAlign="center"
-      horizontalAlign="space-between"
-      styles={{
-        root: {
-          padding: "12px 16px",
-        },
-      }}
-    >
-      {/* Left: Optional back button or empty space */}
-      <div style={{ width: 40 }}></div>
+  console.log(`🎨 DIALOG: PdfContainer component rendered`);
+  console.log(`  📖 Panel state: ${isOpen ? 'OPEN' : 'CLOSED'}`);
+  console.log(`  📄 File: ${fileName}`);
+  console.log(`  🔗 URL: ${fileUrl}`);
+  console.log(`  🌐 SharePoint Context:`, !!context);
+  
+  const [isDragging, setIsDragging] = React.useState(false);
+  
+  React.useEffect(() => {
+    if (isOpen) {
+      console.log(`✅ DIALOG: eSignature panel opened - initializing PDF viewer`);
+    } else {
+      console.log(`❌ DIALOG: eSignature panel closed`);
+    }
+  }, [isOpen]);
 
-      {/* Center: File name */}
-      <Text
-        variant="large"
-        block
+  // Handle dismissal with drag protection
+  const handleDismiss = React.useCallback(() => {
+    if (isDragging) {
+      console.log(`🛡️ DIALOG: Dismissal blocked - drag operation in progress`);
+      return;
+    }
+    console.log(`🔒 DIALOG: Panel dismissal allowed - no active drag`);
+    onDismiss();
+  }, [isDragging, onDismiss]);
+
+  // Track drag state globally
+  React.useEffect(() => {
+    const handleDragStart = () => {
+      console.log(`🚀 DIALOG: Global drag start detected - protecting panel`);
+      setIsDragging(true);
+    };
+    
+    const handleDragEnd = () => {
+      console.log(`🏁 DIALOG: Global drag end detected - allowing panel dismissal`);
+      setIsDragging(false);
+    };
+
+    document.addEventListener('dragstart', handleDragStart);
+    document.addEventListener('dragend', handleDragEnd);
+    document.addEventListener('drop', handleDragEnd);
+
+    return () => {
+      document.removeEventListener('dragstart', handleDragStart);
+      document.removeEventListener('dragend', handleDragEnd);
+      document.removeEventListener('drop', handleDragEnd);
+    };
+  }, []);
+
+  const onRenderHeader = () => {
+    console.log(`🎨 DIALOG: Rendering panel header for: ${fileName}`);
+    return (
+      <Stack
+        horizontal
+        verticalAlign="center"
+        horizontalAlign="space-between"
         styles={{
           root: {
-            textAlign: "center",
-            flexGrow: 1,
-            color: "rgb(255, 255, 255)",
+            padding: "12px 16px",
           },
         }}
       >
-        {fileName}
-      </Text>
-    </Stack>
-  );
+        {/* Left: Optional back button or empty space */}
+        <div style={{ width: 40 }}></div>
+
+        {/* Center: File name */}
+        <Text
+          variant="large"
+          block
+          styles={{
+            root: {
+              textAlign: "center",
+              flexGrow: 1,
+              color: "rgb(255, 255, 255)",
+            },
+          }}
+        >
+          {fileName}
+        </Text>
+      </Stack>
+    );
+  };
 
   return (
-    <Panel
+  <Panel
       isOpen={isOpen}
       styles={panelStyle}
       type={PanelType.custom}
       customWidth="100%"
       onRenderHeader={onRenderHeader}
-      onDismiss={onDismiss}
+      onDismiss={handleDismiss}
       isBlocking={true}
+      isLightDismiss={false}
       headerText="Sign Document"
       closeButtonAriaLabel="Close"
     >
-      <Provider store={store}>
-        <DnDContext>
-          <PDFViewer fileUrl={fileUrl} fileName={fileName} context={context} />
-        </DnDContext>
-      </Provider>
+      <SimpleDragProvider>
+        <PDFViewer fileUrl={fileUrl} fileName={fileName} context={context} />
+      </SimpleDragProvider>
     </Panel>
   );
 };
